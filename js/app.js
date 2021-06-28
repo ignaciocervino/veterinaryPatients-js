@@ -51,6 +51,10 @@ class Citas{
     eliminarCita(id){
         this.citas = this.citas.filter(cita => cita.id !== id);
     }
+    editarCita(citaActualizada){
+        //Si la cita y la cita actualizada matchean se reescribe todo el obj caso contrario mantenemos la cita actual
+        this.citas = this.citas.map(cita => cita.id === citaActualizada.id ? citaActualizada : cita);//Igual que foreach pero nos retorna el arreglo
+    }
 }
 
 //Clase para UI
@@ -187,7 +191,8 @@ function nuevaCita(e){
         ui.imprimirAlerta('Editado correctamente');
 
         //Pasar el objeto de la cita a edicion
-
+        administrarCitas.editarCita({...citaObj});//Una copia de citaObj
+        //Regresar el texto del boton a su estado original
         formulario.querySelector('button[type="submit"]').textContent = 'Crear Cita';
         editando=false;//Quitar modo edicion
     }
