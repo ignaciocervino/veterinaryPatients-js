@@ -10,6 +10,8 @@ const sintomasInput = document.querySelector('#sintomas');
 const formulario = document.querySelector('#nueva-cita');
 const contenedorCitas = document.querySelector('#citas');
 
+let editando;
+
 /** EVENT LISTENERS */
 //Registrar eventos
 eventListeners();
@@ -128,6 +130,15 @@ class UI{
 
             btnEliminar.onclick = ()=>eliminarCita(id);
 
+            //Boton para editar
+            const btnEditar = document.createElement('button');
+            btnEditar.classList.add('btn','btn-info');
+            btnEditar.innerHTML = `Editar <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>`;
+
+            btnEditar.onclick = ()=>cargarEdicion(cita);
+
 
             //Agregar los parrafos a div citas
             divCita.appendChild(mascotaParrafo);
@@ -137,6 +148,7 @@ class UI{
             divCita.appendChild(horaParrafo);
             divCita.appendChild(sintomasParrafo);
             divCita.appendChild(btnEliminar);
+            divCita.appendChild(btnEditar);
 
             //Agregar las citas al HTML
             contenedorCitas.appendChild(divCita);
@@ -171,11 +183,25 @@ function nuevaCita(e){
         return;
     }
 
-    //Generar un id unico
-    citaObj.id = Date.now();
+    if (editando) {
+        ui.imprimirAlerta('Editado correctamente');
 
-    //Creando una nueva cita
-    administrarCitas.agregarCita({...citaObj});//Le paso una copia del objeto
+        //Pasar el objeto de la cita a edicion
+
+        formulario.querySelector('button[type="submit"]').textContent = 'Crear Cita';
+        editando=false;//Quitar modo edicion
+    }
+    else{
+        //Generar un id unico
+        citaObj.id = Date.now();
+
+        //Creando una nueva cita
+        administrarCitas.agregarCita({...citaObj});//Le paso una copia del objeto
+
+        ui.imprimirAlerta('Se agrego correctamente');
+    }
+
+    
 
     //Reiniciar el objeto para la validacion
     reiniciarObjeto();
@@ -203,4 +229,32 @@ function eliminarCita(id){
     ui.imprimirAlerta('La cita se elimino correctamente');
     //Refrescar las citas
     ui.imprimirCitas(administrarCitas);
+}
+
+//Carga los datos y el modo edicion
+function cargarEdicion(cita){
+    const{mascota,propietario,telefono,fecha,hora,sintomas,id} = cita;
+    //Llenar los inputs
+    mascotaInput.value = mascota;
+    propietarioInput.value = propietario;
+    telefonoInput.value = telefono;
+    fechaInput.value = fecha;
+    horaInput.value = hora;
+    sintomasInput.value = sintomas;
+
+    //Llenar el objeto
+    citaObj.mascota = mascota;
+    citaObj.propietario = propietario;
+    citaObj.telefono = telefono;
+    citaObj.fecha = fecha;
+    citaObj.hora = hora;
+    citaObj.sintomas = sintomas;
+    citaObj.id = id;
+
+
+    //Cambiar el texto del boton
+    formulario.querySelector('button[type="submit"]').textContent = 'Guardar cambios';
+    
+    editando=true;//Entro en modo edicion
+
 }
