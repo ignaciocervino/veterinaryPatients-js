@@ -46,6 +46,9 @@ class Citas{
     agregarCita(cita){
         this.citas = [...this.citas,cita];
     }
+    eliminarCita(id){
+        this.citas = this.citas.filter(cita => cita.id !== id);
+    }
 }
 
 //Clase para UI
@@ -117,6 +120,13 @@ class UI{
             `;
 
             //Boton para eliminar esta cita
+            const btnEliminar = document.createElement('button');
+            btnEliminar.classList.add('btn','btn-danger','mr-2');
+            btnEliminar.innerHTML = `Eliminar <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>`;
+
+            btnEliminar.onclick = ()=>eliminarCita(id);
 
 
             //Agregar los parrafos a div citas
@@ -126,6 +136,7 @@ class UI{
             divCita.appendChild(fechaParrafo);
             divCita.appendChild(horaParrafo);
             divCita.appendChild(sintomasParrafo);
+            divCita.appendChild(btnEliminar);
 
             //Agregar las citas al HTML
             contenedorCitas.appendChild(divCita);
@@ -185,3 +196,11 @@ function reiniciarObjeto(){
 
 }
 
+function eliminarCita(id){
+    //Eliminar la cita
+    administrarCitas.eliminarCita(id);
+    //Mostrar mensaje
+    ui.imprimirAlerta('La cita se elimino correctamente');
+    //Refrescar las citas
+    ui.imprimirCitas(administrarCitas);
+}
