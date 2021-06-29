@@ -13,6 +13,7 @@ import {
 const ui = new UI();
 const administrarCitas = new Citas();
 
+
 let editando;
 export let DB;
 //Objeto con la informacion de la cita
@@ -81,7 +82,7 @@ export function nuevaCita(e){
     formulario.reset(); // Reinicia el formulario
 
     //Mostrar el HTML de las citas
-    ui.imprimirCitas(administrarCitas);
+    ui.imprimirCitas();
 }
 
 export function reiniciarObjeto(){
@@ -100,7 +101,7 @@ export function eliminarCita(id){
     //Mostrar mensaje
     ui.imprimirAlerta('La cita se elimino correctamente');
     //Refrescar las citas
-    ui.imprimirCitas(administrarCitas);
+    ui.imprimirCitas();
 }
 
 //Carga los datos y el modo edicion
@@ -144,6 +145,8 @@ export function crearDB(){
     crearDB.onsuccess = function(){
         console.log('DB creada');
         DB = crearDB.result;
+        //Mostrar citas al cargar (Pero IndexedDB ya esta listo)
+        ui.imprimirCitas();
     }
 
     //Definir el schema
